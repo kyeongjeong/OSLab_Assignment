@@ -19,6 +19,7 @@ static asmlinkage pid_t process_tracer(const struct pt_regs *regs) {
     struct list_head *p_list;
     int sibling_count = 0, child_count = 0;
     pid_t trace_task = regs->di;
+    char *state_str;
 
     for_each_process(task) {
         
@@ -26,7 +27,6 @@ static asmlinkage pid_t process_tracer(const struct pt_regs *regs) {
 
             printk("##### TASK INFORMATION of \"[%d] %s\" #####\n", task->pid, task->comm);
 
-            char *state_str;
             switch (task->state) {
                 case TASK_RUNNING:
                     state_str = "Running or Ready";
@@ -84,7 +84,6 @@ static asmlinkage pid_t process_tracer(const struct pt_regs *regs) {
                 printk("  > [%d] %s\n", child->pid, child->comm);
                 ++child_count;
             }
-
             if(child_count > 0)
                 printk("  > This process has %d child process(es)\n", child_count);
             else 

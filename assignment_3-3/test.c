@@ -6,8 +6,9 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 
-int main(void) {
+int main() {
 
-    syscall(336, 1);
+    int return_value = syscall(336, 1); 
+    printf("return value : %d\n", return_value);
     return 0;
 }

@@ -6,7 +6,7 @@ int main() {
     FILE *file = fopen("temp.txt", "w");
 
     if (file == NULL) {
-        perror("Failed to open file");
+        perror("Fail to open file");
         return 1;
     }
 

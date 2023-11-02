@@ -11,7 +11,7 @@ int main() {
     char file_name[100];
 
     if (mkdir("temp", 0777)) {
-        perror("fail to make directory");
+        perror("Fail to make directory");
         return 1;
     }
 
@@ -20,8 +20,12 @@ int main() {
         snprintf(file_name, sizeof(file_name), "temp/%d", i);
 
         FILE *file = fopen(file_name, "w");
-        fprintf(file, "%d", 1 + rand() % 9); 
+        int rand_num = 1 + rand() % 9;
+        fprintf(file, "%d", rand_num);
         fclose(file);
+
+        if(i % 1000 == 0)
+            printf("value of temp/%d : %d\n", i, rand_num);
     }
 
     return 0;

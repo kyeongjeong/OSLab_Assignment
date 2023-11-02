@@ -24,7 +24,7 @@ static asmlinkage pid_t process_tracer(const struct pt_regs *regs) {
         
         if (task->pid == trace_task) {
 
-            printk("##### TASK INFORMATION of ''[%d] %s'' #####\n", task->pid, task->comm);
+            printk("##### TASK INFORMATION of \"[%d] %s\" #####\n", task->pid, task->comm);
 
             char *state_str;
             switch (task->state) {

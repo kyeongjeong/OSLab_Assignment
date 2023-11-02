@@ -19,7 +19,7 @@ int main() {
 
     FILE *file = fopen("temp.txt", "r");
     if(file == NULL) {
-        printf("Fail to open file\n");
+        perror("Fail to open file");
         exit(1);
     }
 

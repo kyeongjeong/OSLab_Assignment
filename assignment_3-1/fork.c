@@ -5,7 +5,7 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <math.h>
-#define MAX_PROCESSES 64
+#define MAX_PROCESSES 8
 
 int recursive_sum(int num_array[], int start, int end);
 
@@ -17,7 +17,7 @@ int main() {
 
     FILE *file = fopen("temp.txt", "r");
     if(file == NULL) {
-        printf("Fail to open file\n");
+        perror("Fail to open file");
         exit(1);
     }
 
@@ -50,7 +50,7 @@ int recursive_sum(int num_array[], int start, int end) {
 
     pid1 = fork();
     if (pid1 == -1) {        
-        printf("Fork error");
+        perror("Fork error\n");
         exit(1);
     } 
     else if (pid1 == 0) {
@@ -60,7 +60,7 @@ int recursive_sum(int num_array[], int start, int end) {
 
     pid2 = fork();
     if (pid2 == -1) {
-        perror("Fork error");
+        perror("Fork error\n");
         exit(1);
     } 
     else if (pid2 == 0) {

@@ -1,14 +1,12 @@
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdlib.h>
 #include <unistd.h>
-#include <sys/syscall.h>
+#include <sys/types.h>
+#include <linux/unistd.h>
 
-int main() {
+#define __NR_ftrace 336
 
-    int return_value = syscall(336, 1); 
+int main(){
+    
+    int return_value = syscall(__NR_ftrace, getpid());
     printf("return value : %d\n", return_value);
     return 0;
 }

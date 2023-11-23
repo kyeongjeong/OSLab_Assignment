@@ -24,7 +24,7 @@ static asmlinkage pid_t file_varea(const struct pt_regs *regs) {
     struct file *exe_file;
     char* file_path;
     char buf[FILE_LENGTH];
-
+    
     task = pid_task(find_vpid(trace_task), PIDTYPE_PID);
     if (!task) {
         printk("Process with PID %d not found.\n", trace_task);

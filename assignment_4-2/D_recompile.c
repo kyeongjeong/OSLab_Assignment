@@ -12,11 +12,11 @@ uint8_t* Operation;
 uint8_t* compiled_code;
 int segment_id;
 
-void sharedmem_init(); // 공유 메모리에 접근
+void sharedmem_init(); // access to shared memory
 void sharedmem_exit();
-void drecompile_init(); // memory mapping 시작
+void drecompile_init(); // memory mapping start
 void drecompile_exit(); 
-void* drecompile(uint8_t *func); // 최적화하는 부분
+void* drecompile(uint8_t *func); // optimization
 
 int main(void)
 {
@@ -25,8 +25,8 @@ int main(void)
 
     sharedmem_init();
     drecompile_init(Operation);
-
     func = (int (*)(int a))drecompile(Operation);
+
     clock_gettime(CLOCK_MONOTONIC, &start_time);
     func(1);
     clock_gettime(CLOCK_MONOTONIC, &end_time);
@@ -64,10 +64,19 @@ void drecompile_exit()
 void* drecompile(uint8_t* func)
 {
 #ifdef dynamic
-    int i = 0, j = 0, k = 0;
+    int i = 0, j = 0, k = 0, isFirst = 1, dl;
     uint8_t operand = 0, nextOperand = 0;
     do {
-        if (func[i] == 0x83 && func[i + 1] == 0xc0) {
+        if(func[i] == 0xb2 && isFirst == 1) {
+            compiled_code[k] = func[i];
+            compiled_code[k + 1] = func[i + 1];
+            dl = func[i + 1];
+            i += 2;
+            k += 2;
+            isFirst == 0;
+        }
+
+        else if (func[i] == 0x83 && func[i + 1] == 0xc0) {
             compiled_code[k] = func[i];
             compiled_code[k + 1] = func[i + 1];
             operand = func[i + 2];
@@ -80,7 +89,7 @@ void* drecompile(uint8_t* func)
                     j += 3;
                 } 
             else 
-                    break;
+                break;
             }
             i = j;
             compiled_code[k + 2] = operand;
@@ -128,11 +137,12 @@ void* drecompile(uint8_t* func)
         }
 
         else if (func[i] == 0xf6) {    
-            operand = 2;
+            
+            operand = dl;
             for (j = i + 2; func[j] != 0xc3;) {
                 if (func[j] == 0xf6) {
 
-                    operand *= 2;
+                    operand *= dl;
                     j += 2;
                 } 
                 else 
@@ -160,7 +170,9 @@ void* drecompile(uint8_t* func)
         compiled_code[i++] = *func;
     } while (*func++ != 0xC3);
     compiled_code[i] = 0xC3;
+    
 #endif
+
     mprotect(compiled_code, PAGE_SIZE, PROT_READ | PROT_EXEC);
     return compiled_code;
 }
